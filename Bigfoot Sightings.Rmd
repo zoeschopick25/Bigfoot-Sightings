@@ -1,0 +1,49 @@
+---
+title: "Bigfoot Sightings by Month"
+output:
+  pdf_document: default
+  html_document: default
+date: "2023-10-24"
+---
+
+```{r code1, echo = FALSE}
+
+
+library(dplyr)
+library(ggplot2)
+```
+
+```{r code2, echo = FALSE}
+
+bf <- read.csv("/Users/zoeschopick/bf3.csv")
+```
+
+
+```{r code3, echo=FALSE}
+bf2 <- bf %>% mutate(Month = factor(Month, levels = c("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"))) 
+  
+
+
+
+```
+
+The number of Bigfoot sightings is shown according to month reported and region the report came from. The original data was cleaned before import. Only month and state were included in the dataset. The states are sorted into regions. The regions are West (WA, OR, MT, ID, WY, NV, CA, UT, CO, AK, HI), Midwest (ND, SD, NE, KS, MN, IA, MO, WI, IL, IN, OH, MI), Southwest (AZ, NM, TX, OK), Southeast (AR, LA, MS, TN, AL, GA, KY, WV, VA, NC, SC, FL), Northeast (ME, VT, NH, CT, RI, NY, NJ, PA, MD, DE, MA). 
+```{r code4, echo=FALSE}
+
+bf2 <- bf2 %>% mutate(Region = gsub("Alaska", "West", Region), Region = gsub("California", "West", Region),Region = gsub("Washington", "West", Region), Region = gsub("Oregon", "West", Region), Region = gsub("Montana", "West", Region), Region = gsub("Idaho", "West", Region), Region = gsub("Wyoming", "West", Region), Region = gsub("Nevada", "West", Region), Region = gsub("Utah", "West", Region), Region = gsub("Colorado", "West", Region), Region = gsub("Hawaii", "West", Region) )%>%
+  mutate(Region=gsub("Nebraska", "Midwest", Region),Region=gsub("North Dakota", "Midwest", Region), Region=gsub("South Dakota", "Midwest", Region), Region=gsub("Kansas", "Midwest", Region), Region=gsub("Minnesota", "Midwest", Region), Region=gsub("Iowa", "Midwest", Region ), Region=gsub("Missouri", "Midwest", Region), Region=gsub("Wisconsin", "Midwest", Region ), Region=gsub("Illinois", "Midwest", Region ), Region=gsub("Indiana", "Midwest", Region ), Region=gsub("Ohio", "Midwest", Region ), Region=gsub("Michigan", "Midwest", Region )) %>% 
+  mutate(Region=gsub("Arizona", "Southwest", Region ), Region=gsub("New Mexico", "Southwest", Region ), Region=gsub("Texas", "Southwest", Region ), Region=gsub("Oklahoma", "Southwest", Region )) %>%
+  mutate(Region=gsub("Arkansas", "Southeast", Region ), Region=gsub("Louisiana", "Southeast", Region ), Region=gsub("Mississippi", "Southeast", Region ), Region=gsub("Tennessee", "Southeast", Region ), Region=gsub("Alabama", "Southeast", Region ), Region=gsub("Georgia", "Southeast", Region ), Region=gsub("Kentucky", "Southeast", Region ), Region=gsub("West Virginia", "Southeast", Region ),Region=gsub("Virginia", "Southeast", Region ), Region=gsub("North Carolina", "Southeast", Region ), Region=gsub("South Carolina", "Southeast", Region ), Region=gsub("Florida", "Southeast", Region )) %>%
+  mutate(Region=gsub("Maine", "Northeast", Region ), Region=gsub("Vermont", "Northeast", Region ), Region=gsub("New Hampshire", "Northeast", Region ), Region=gsub("Connecticut", "Northeast", Region ), Region=gsub("Rhode Island", "Northeast", Region ), Region=gsub("New York", "Northeast", Region ), Region=gsub("New Jersey", "Northeast", Region ), Region=gsub("Pennsylvania", "Northeast", Region ), Region=gsub("Maryland", "Northeast", Region ),Region=gsub("Delaware", "Northeast", Region ), Region=gsub("Massachusetts", "Northeast", Region ) )
+
+  
+
+
+
+bf2 <- bf2 %>% mutate(Month = factor(Month, levels = c("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"))) 
+  
+
+
+ggplot(data=subset(bf2, !is.na(Month)), aes(x=Month, fill = Region))+geom_bar() + theme_bw() + theme(axis.text.x = element_text(
+                           size = 8, angle = 20), plot.title = element_text(hjust = 0.5, size=15), axis.title = element_text(size = 12))+  ggtitle("Bigfoot Sightings by Month and Region") + ylab("Sightings") + scale_fill_manual(values = c("darkgoldenrod2", "darkolivegreen4", "darkorange3", "coral4", "darkcyan"))
+```
